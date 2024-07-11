@@ -26,6 +26,10 @@ module.exports = {
       event_id: {
         type: Sequelize.INTEGER,
         allowNull: false
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
       }
     });
   },

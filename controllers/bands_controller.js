@@ -23,26 +23,41 @@ bands.get('/', async (req, res) => {
 // FIND A SPECIFIC BAND (show)
 bands.get('/:name', async (req, res) => {
     try {
+        // Decode the band name to handle special characters
+        const bandName = decodeURIComponent(req.params.name);
+        console.log('Searching for band:', bandName);  // Debugging log
         const foundBand = await Band.findOne({
-            where: { name: req.params.name  },
-            include: [ 
-                { 
-                    model: MeetGreet, 
-                    as: "meet_greets",
-                    where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%` }} 
+            where: { name: bandName },
+            include: [
+                {
+                    model: MeetGreet,
+                    as: 'meet_greets',
+                    include: {
+                        model: Event,
+                        as: 'event'
+                    }
                 },
-                { 
+                {
                     model: SetTime,
-                    as: "set_times",
-                    where: { name: { [Op.like]: `%${req.query.event ? req.query.event : ''}%` }}
+                    as: 'set_times',
+                    include: {
+                        model: Event,
+                        as: 'event'
+                    }
                 }
-            ] 
-        })
-        res.status(200).json(foundBand)
+            ]
+        });
+        if (foundBand) {
+            res.status(200).json(foundBand);
+        } else {
+            res.status(404).json({ message: 'Band not found' });
+        }
     } catch (error) {
-        res.status(500).json(error)
+        console.error('Error fetching band:', error);  // Debugging log
+        res.status(500).json(error);
     }
-})
+});
+
 
 
 // CREATE A BAND (create)
