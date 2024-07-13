@@ -3,8 +3,18 @@ const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class StageEvent extends Model {
-    static associate({ Event, Stage }) {
-      // Define associations if necessary
+    static associate({ Stage, Event }) {
+      // Belongs to Stage
+      StageEvent.belongsTo(Stage, {
+        foreignKey: 'stage_id',
+        as: 'stage'
+      });
+
+      // Belongs to Event
+      StageEvent.belongsTo(Event, {
+        foreignKey: 'event_id',
+        as: 'event'
+      });
     }
   }
 
