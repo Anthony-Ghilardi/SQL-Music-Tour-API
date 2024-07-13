@@ -1,29 +1,28 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  // This is a many to many relationship taking info from stage.js
   class Event extends Model {
     static associate({ Stage, StageEvent, MeetGreet, SetTime }) {
-      // stages
+      // Many-to-many relationship with Stage through StageEvent
       Event.belongsToMany(Stage, {
-        foreignKey: "event_id",
-        as: "stages",
-        through: "StageEvent"
-      })
+        through: StageEvent,
+        foreignKey: 'event_id',
+        otherKey: 'stage_id',
+        as: 'stages'
+      });
 
       // Meet and Greets
       Event.hasMany(MeetGreet, {
-        foreignKey: "event_id",
-        as: "meet_greets"
-      })
+        foreignKey: 'event_id',
+        as: 'meet_greets'
+      });
 
       // Set Times
       Event.hasMany(SetTime, {
-        foreignKey: "event_id",
-        as: "set_times"
-      })
+        foreignKey: 'event_id',
+        as: 'set_times'
+      });
     }
   }
   
@@ -38,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }, 
     date: {
-      type:DataTypes.DATE,
+      type: DataTypes.DATE,
       allowNull: false
     },
     start_time: {
@@ -48,12 +47,13 @@ module.exports = (sequelize, DataTypes) => {
     end_time: {
       type: DataTypes.DATE,
       allowNull: false
-    } 
+    }
   }, {
     sequelize,
     modelName: 'Event',
     tableName: 'events',
     timestamps: false
   });
+
   return Event;
 };

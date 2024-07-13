@@ -53,7 +53,7 @@ bands.get('/:name', async (req, res) => {
             res.status(404).json({ message: 'Band not found' });
         }
     } catch (error) {
-        console.error('Error fetching band:', error);  // Debugging log
+        console.error('Error fetching band:', error);
         res.status(500).json(error);
     }
 });

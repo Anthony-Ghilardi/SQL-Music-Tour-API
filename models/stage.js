@@ -1,23 +1,22 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  // This is a many to many relationship provinding data to events.js
   class Stage extends Model {
     static associate({ Event, StageEvent, SetTime }) {
-      // events
+      // Many-to-many relationship with Event through StageEvent
       Stage.belongsToMany(Event, {
-        foreignKey: "stage_id",
-        as: "events",
-        through: "StageEvent"
-      })
+        through: StageEvent,
+        foreignKey: 'stage_id',
+        otherKey: 'event_id',
+        as: 'events'
+      });
 
       // Set Times
       Stage.hasMany(SetTime, {
-        foreignKey: "stage_id",
-        as: "set_times"
-      })
+        foreignKey: 'stage_id',
+        as: 'set_times'
+      });
     }
   }
   
@@ -28,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     stage_name: {
-      type:DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     } 
   }, {
@@ -37,5 +36,6 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'stages',
     timestamps: false
   });
+
   return Stage;
 };

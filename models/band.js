@@ -1,52 +1,44 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-  // This is a many to one relationship taking data from band.js
   class Band extends Model {
     static associate({ MeetGreet, SetTime }) {
-      // meet and greets
+      // Meet and Greets
       Band.hasMany(MeetGreet, {
-        foreignKey: "band_id",
-        as: "meet_greets"
-      })
+        foreignKey: 'band_id',
+        as: 'meet_greets'
+      });
 
       // Set Times
       Band.hasMany(SetTime, {
-        foreignKey: "band_id",
-        as: "set_times"
-      })
+        foreignKey: 'band_id',
+        as: 'set_times'
+      });
     }
   }
-
+  
   Band.init({
     band_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
     name: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false
     },
     genre: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    available_start_time: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    end_time: {
-        type: DataTypes.DATE,
-        allowNull: false
-    } 
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+    // Add more fields as necessary
   }, {
     sequelize,
     modelName: 'Band',
     tableName: 'bands',
     timestamps: false
   });
+
   return Band;
 };
